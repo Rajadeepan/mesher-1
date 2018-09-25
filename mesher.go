@@ -16,6 +16,8 @@ import (
 	_ "github.com/go-mesh/mesher/protocol/http"
 
 	"github.com/go-mesh/mesher/server"
+
+	_ "github.com/go-mesh/mesher/egress/chassis"
 )
 
 func main() {

@@ -19,7 +19,6 @@ package metrics
 
 import (
 	"github.com/go-chassis/go-chassis/core/lager"
-	"github.com/go-chassis/go-chassis/metrics"
 	"github.com/prometheus/client_golang/prometheus"
 	"runtime"
 	"sync"
@@ -71,11 +70,11 @@ func getPrometheusSinker(pr *prometheus.Registry) *PrometheusMesherSinker {
 //GetPrometheusExporter returns default prometheus exporter
 func GetPrometheusExporter() *PrometheusExporter {
 	//use go chassis registry
-	var promRegistry = metrics.GetSystemPrometheusRegistry()
-	prometheus.DefaultGatherer = promRegistry
-	prometheus.DefaultRegisterer = promRegistry
+	//	var promRegistry = metrics.GetSystemPrometheusRegistry()
+	//	prometheus.DefaultGatherer = promRegistry
+	//	prometheus.DefaultRegisterer = promRegistry
 	return &PrometheusExporter{
-		registry:      promRegistry,
+		//		registry:      promRegistry,
 		gauges:        make(map[string]*prometheus.GaugeVec),
 		counters:      make(map[string]*prometheus.CounterVec),
 		summary:       make(map[string]*prometheus.SummaryVec),
