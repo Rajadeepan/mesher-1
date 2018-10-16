@@ -18,8 +18,7 @@ import (
 	"strconv"
 	"strings"
 
-	//"google.golang.org/genproto/protobuf/ptype"
-	"github.com/go-chassis/go-chassis/control"
+	"github.com/go-mesh/mesher/control/istio"
 )
 
 const egressPilotSourceName = "EgressPilotSource"
@@ -67,7 +66,7 @@ func addEgressPilotSource(o egress.Options) error {
 	return pilotfetcher.AddSource(s, s.GetPriority())
 }
 
-// pilotSource keeps the route rule in istio
+// pilotSource keeps the egress rule in istio
 type pilotSource struct {
 	refreshInverval time.Duration
 	fetcher         client.PilotClient
@@ -173,7 +172,7 @@ func (r *pilotSource) DynamicConfigHandler(callback core.DynamicConfigCallback) 
 			}
 			for k, d := range data {
 				SetEgressRuleByKey(k, d.([]*egressmodel.EgressRule))
-				saveToEgressCache(d.([]*egressmodel.EgressRule))
+				istio.SaveToEgressCache(map[string][]*egressmodel.EgressRule{k: d.([]*egressmodel.EgressRule)})
 			}
 
 		case <-ticker.C:
@@ -277,29 +276,8 @@ func (r *pilotEventListener) Event(e *core.Event) {
 
 	if ok {
 		SetEgressRuleByKey(e.Key, egressRules)
-		saveToEgressCache(egressRules)
+		istio.SaveToEgressCache(map[string][]*egressmodel.EgressRule{e.Key: egressRules})
 		wp.GetPool().Reset(e.Key)
 		lager.Logger.Infof("Update [%s] egress rule of pilot success", e.Key)
 	}
-}
-
-func saveToEgressCache(egressconfig []*egressmodel.EgressRule) {
-	var egressconfigpanel []control.EgressConfig
-	for _, v := range egressconfig {
-		var Ports []*control.EgressPort
-		for _, v1 := range v.Ports {
-			p := control.EgressPort{
-				Port:     (*v1).Port,
-				Protocol: (*v1).Protocol,
-			}
-			Ports = append(Ports, &p)
-		}
-		c := control.EgressConfig{
-			Hosts: v.Hosts,
-			Ports: Ports,
-		}
-		egressconfigpanel = append(egressconfigpanel, c)
-
-	}
-	control.DefaultPanel.SaveToEgressCache(egressconfigpanel)
 }

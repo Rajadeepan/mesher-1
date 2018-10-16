@@ -33,6 +33,7 @@ import (
 	chassisHandler "github.com/go-chassis/go-chassis/core/handler"
 	"github.com/go-chassis/go-chassis/core/lager"
 	"github.com/go-chassis/go-chassis/core/metadata"
+	"github.com/go-mesh/mesher/control"
 	"github.com/go-mesh/mesher/egress"
 	_ "github.com/go-mesh/mesher/egress/pilot"
 	"github.com/go-mesh/mesher/pkg/metrics"
@@ -42,7 +43,7 @@ import (
 // Start initialize configs and components
 func Start() error {
 	if err := config.InitProtocols(); err != nil {
-		return err
+		return err	
 	}
 	if err := config.Init(); err != nil {
 		return err
@@ -65,6 +66,10 @@ func Start() error {
 	}
 	err := egress.Init()
 	if err != nil {
+		return err
+	}
+
+	if err := control.Init(); err != nil {
 		return err
 	}
 

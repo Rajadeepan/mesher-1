@@ -29,8 +29,6 @@ import (
 	"github.com/go-mesh/mesher/config/model"
 	"regexp"
 	"strings"
-	//"github.com/go-chassis/go-chassis/control/archaius"
-	"github.com/go-chassis/go-chassis/control"
 )
 
 const (
@@ -57,33 +55,11 @@ func Init() error {
 	if egressConfigFromFile != nil {
 		if egressConfigFromFile.Destinations != nil {
 			DefaultEgress.SetEgressRule(egressConfigFromFile.Destinations)
-
-			var egressconfig []control.EgressConfig
-			for _, v := range egressConfigFromFile.Destinations {
-				var Ports []*control.EgressPort
-				for _, v1 := range v {
-
-					for _, v2 := range v1.Ports {
-						p := control.EgressPort{
-							Port:     (*v2).Port,
-							Protocol: (*v2).Protocol,
-						}
-						Ports = append(Ports, &p)
-					}
-					c := control.EgressConfig{
-						Hosts: v1.Hosts,
-						Ports: Ports,
-					}
-					egressconfig = append(egressconfig, c)
-				}
-
-			}
-			control.DefaultPanel.SaveToEgressCache(egressconfig)
 		}
 	}
 	op, err := getSpecifiedOptions()
 	if err != nil {
-		return fmt.Errorf("Router options error: %v", err)
+		return fmt.Errorf("Egress options error: %v", err)
 	}
 	DefaultEgress.Init(op)
 	// storing the egress rules based on host in two maps

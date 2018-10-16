@@ -18,6 +18,10 @@ import (
 	"github.com/go-mesh/mesher/server"
 
 	_ "github.com/go-mesh/mesher/egress/chassis"
+	_ "github.com/go-mesh/mesher/egress/pilot"
+
+	_ "github.com/go-mesh/mesher/control/archiaus"
+	_ "github.com/go-mesh/mesher/control/istio"
 )
 
 func main() {

@@ -21,6 +21,7 @@ import (
 	"errors"
 	"github.com/go-chassis/go-chassis/control"
 	"github.com/go-mesh/mesher/config/model"
+	meshercontrol "github.com/go-mesh/mesher/control"
 	"regexp"
 	"sync"
 )
@@ -66,7 +67,7 @@ func BuildEgress(name string) error {
 
 //Match Check Egress rule matches
 func Match(hostname string) (bool, *control.EgressConfig) {
-	EgressRules := control.DefaultPanel.GetEgressRule()
+	EgressRules := meshercontrol.DefaultPanelEgress.GetEgressRule()
 	for _, egress := range EgressRules {
 
 		for _, host := range egress.Hosts {

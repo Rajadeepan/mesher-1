@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	egressmodel "github.com/go-mesh/mesher/config/model"
+	"github.com/go-mesh/mesher/control/istio"
 	"github.com/go-mesh/mesher/egress"
 )
 
@@ -51,7 +52,7 @@ func refresh() error {
 			return err
 		}
 		d[k] = rules
-		saveToEgressCache(rules)
+		istio.SaveToEgressCache(d)
 	}
 	ok, _ := egress.ValidateEgressRule(d)
 	if ok {
